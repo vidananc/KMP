@@ -26,7 +26,7 @@ public class BMP
             }
             if(preNext[i] != -1)
             {
-                if(s.charAt(i) == s.charAt(preNext[i]))
+                if(s.charAt(i) == s.charAt(preNext[i]))//next字符和当前字符相同，必然不会和比较的字符串当前的字符相同，故优化
                 {
                     if(s.charAt(i) == s.charAt(0)) next[i] = -1;
                     else next[i] = 0;
