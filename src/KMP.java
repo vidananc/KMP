@@ -1,11 +1,11 @@
 import java.util.Scanner;
 
-public class BMP
+public class KMP
 {
     private String s;
     private int[] next;
     private int[] preNext;//记录不考虑相同字符优化的next数组值
-    public BMP(String s)
+    public KMP(String s)
     {
         this.s = s;
         next = new int[s.length()];
@@ -16,24 +16,19 @@ public class BMP
     }
     private void getNext()
     {
-        for(int i = 1; i < s.length(); i++)
+        int k = -1;
+        int j = 0;
+        while(j < s.length() - 1)
         {
-            if(preNext[i - 1] == -1) preNext[i] = 0;
-            else
-            {
-                if(s.charAt(preNext[i - 1]) == s.charAt(i - 1)) preNext[i] = preNext[i - 1] + 1;
-                else preNext[i] = 0;
-            }
-            if(preNext[i] != -1)
-            {
-                if(s.charAt(i) == s.charAt(preNext[i]))//next字符和当前字符相同，必然不会和比较的字符串当前的字符相同，故优化
-                {
-                    if(s.charAt(i) == s.charAt(0)) next[i] = -1;
-                    else next[i] = 0;
-                }
-                else next[i] = preNext[i];
-            }
-            else next[i] = -1;
+            if(k == -1 || s.charAt(k) == s.charAt(j)) preNext[++j] = ++k;
+            else k = preNext[k];
+        }
+        j = 1;
+        while(j < s.length())
+        {
+            k = preNext[j];
+            while(k != -1 && s.charAt(j) == s.charAt(k)) k = preNext[k];
+            next[j++] = k;
         }
     }
     public boolean contains(String l)
@@ -70,7 +65,7 @@ public class BMP
     }
     public static void main(String[] args)
     {
-        BMP b = new BMP("aaaaaab");
+        KMP b = new KMP("aabaaac");
         b.printNext();
         Scanner input = new Scanner(System.in);
         String line;
